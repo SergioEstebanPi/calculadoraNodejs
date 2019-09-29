@@ -22,22 +22,23 @@ app.get('/', function(req, res) {
 
 app.post(
     '/test',
-    body().custom(function(e){
-        try{
-            //console.log(e);
-            if(Array.isArray(JSON.parse(e))){
-                return true;
+    [
+        body().custom(function(e){
+            try{
+                if(Array.isArray(JSON.parse(e))){
+                    return true;
+                }
+            } catch(e){
+                return false;
             }
-        } catch(e){
-            console.log("Error al convertir entrada");
             return false;
-        }
-        return false;
-    }),
+        })
+    ],
     function(req, res){
         //var contype = req.headers['content-type'];
         //console.log(contype);
         const errors = validationResult(req);
+        //console.log(errors);
         if (!errors.isEmpty()) {
             respuesta = {
                 data: '',
@@ -46,7 +47,7 @@ app.post(
             return res.status(422).json(respuesta);
         }
         //
-        let entrada = JSON . parse(req.body);
+        let entrada = JSON.parse(req.body);
         let numeros = Array.from(entrada);
         //console.log(numeros);
         let suma = numeros.reduce((total, actual) => (total + actual));
@@ -73,19 +74,18 @@ app.post(
 );
 
 app.use(function(err, req, res, next) {
-    console.error(err.stack);
+    //console.error(err.stack);
     respuesta = {
         data: '',
-        errores: ['internal_server_error']
+        errors: ['internal_server_error']
     };    
     res.status(500).send(respuesta);
 });  
 
 app.use(function(req, res, next) {
     respuesta = {
-     error: true, 
-     codigo: 404, 
-     mensaje: 'URL no encontrada'
+        data: '',
+        errors: ['url_not_found']
     };
     res.status(404).send(respuesta);
 });
