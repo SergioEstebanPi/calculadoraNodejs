@@ -40,7 +40,7 @@ app.post(
             return res.status(422).json(respuesta);
         }
         //
-        let entrada = JSON.parse(req.body);
+        let entrada = JSON . parse(req.body);
         let numeros = Array.from(entrada);
         //console.log(numeros);
         let suma = numeros.reduce((total, actual) => (total + actual));
