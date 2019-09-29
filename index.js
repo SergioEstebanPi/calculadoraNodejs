@@ -4,6 +4,8 @@ const { body, validationResult } = require('express-validator');
 
 const app = express();
 app.use(bodyParser.text());
+//app.use(bodyParser.urlencoded({extended: true}));
+//app.use(bodyParser.json());
 
 let respuesta = {
     data: '',
@@ -22,15 +24,19 @@ app.post(
     '/test',
     body().custom(function(e){
         try{
+            //console.log(e);
             if(Array.isArray(JSON.parse(e))){
                 return true;
             }
         } catch(e){
+            console.log("Error al convertir entrada");
             return false;
         }
         return false;
     }),
     function(req, res){
+        //var contype = req.headers['content-type'];
+        //console.log(contype);
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             respuesta = {
